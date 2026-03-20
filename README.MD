@@ -1,3 +1,3 @@
-# LeetCode TSX Starter
+# LeetCode solutions
 
 Project for leetcode solutions
