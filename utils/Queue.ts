@@ -1,26 +1,28 @@
 export class Queue<T extends {} | null> {
-	private elems: T[] = []
-	private start: number = 0
-	private end: number = 0
+  private elems: T[] = []
+  private start: number = 0
+  private end: number = 0
 
-	public enqueue(element: T){
-		this.elems[this.end] = element
-		this.end += 1
-	}
+  public enqueue(element: T) {
+    this.elems[this.end] = element
+    this.end += 1
+  }
 
-	public dequeue(): T | undefined {
-		if(this.start === this.end){
-			return undefined
-		}
+  public dequeue(): T | undefined {
+    if (this.start === this.end) {
+      return undefined
+    }
 
-		const element = this.elems[this.start]!
+    const element = this.elems[this.start]!
 
-		this.start += 1
+    delete this.elems[this.start]
 
-		return element
-	}
+    this.start += 1
 
-	public get size(): number {
-		return this.end - this.start
-	}
+    return element
+  }
+
+  public get size(): number {
+    return this.end - this.start
+  }
 }

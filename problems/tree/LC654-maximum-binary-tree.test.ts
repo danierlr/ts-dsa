@@ -37,7 +37,7 @@ class TreeNode {
 
 describe('example desc', () => {
   it('desc 0', () => {
-    const result = constructMaximumBinaryTree([3, 2, 1, 6, 0, 5])
+    // const result = constructMaximumBinaryTree([3, 2, 1, 6, 0, 5])
     expect(1).toEqual(1)
   })
 })

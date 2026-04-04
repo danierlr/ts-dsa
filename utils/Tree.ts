@@ -1,12 +1,12 @@
 export class TreeNode {
-	val: number
-	left: TreeNode | null
-	right: TreeNode | null
-	constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {
-		this.val = val === undefined ? 0 : val
-		this.left = left === undefined ? null : left
-		this.right = right === undefined ? null : right
-	}
+  val: number
+  left: TreeNode | null
+  right: TreeNode | null
+  constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {
+    this.val = val === undefined ? 0 : val
+    this.left = left === undefined ? null : left
+    this.right = right === undefined ? null : right
+  }
 }
 
 export const treeToArray = (root: TreeNode | null): (number | null)[] => {
@@ -47,4 +47,10 @@ export const treeToArray = (root: TreeNode | null): (number | null)[] => {
   const result: (number | null)[] = nodes.map((node) => node?.val ?? null)
 
   return result
+}
+
+export const arrayToTree = (array: number): TreeNode | null => {
+  // todo
+
+  return null
 }
