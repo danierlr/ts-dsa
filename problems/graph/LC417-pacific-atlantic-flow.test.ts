@@ -1,96 +1,151 @@
-// const toKey = (x: number, y: number) => `${x}_${y}`
+import { Queue } from '@/utils/Queue'
 
-// type Vec = {
-//   x: number
-//   y: number
-// }
+type Vec = {
+  x: number
+  y: number
+}
 
-// function pacificAtlantic(heights: number[][]): number[][] {
-//   const lenX = heights.length
-//   const lenY = heights[0]!.length
+function pacificAtlantic(heights: number[][]): number[][] {
+  // heights[x][y]
+  // nw - pacific
+  // se - atlantic
 
-//   const pacificNodes = new Set<string>()
-//   const atlanticNodes = new Set<string>()
+  const bothReachable: Vec[] = []
 
-//   const visited = new Set<string>()
+  const lenX = heights.length
+  const lenY = heights[0]!.length
+  const heightsMap = heights
+  const reachableNWMap: (true | undefined)[][] = Array(lenX)
+    .fill(null)
+    .map(() => [])
+  const reachableSEMap: (true | undefined)[][] = Array(lenX)
+    .fill(null)
+    .map(() => [])
 
-//   const result: number[][] = []
+  const frontier = new Queue<Vec>()
 
-//   let nodesToExplore: Vec[] = []
+  const applyNWReachable = (vec: Vec) => {
+    frontier.enqueue(vec)
+    reachableNWMap[vec.x]![vec.y]! = true
+  }
 
-//   //
+  for (let x = 0; x < lenX; x += 1) {
+    applyNWReachable({ x, y: 0 })
+  }
 
-//   for (let x = 0; x < lenX; x += 1) {
-//     nodesToExplore.push({ x, y: 0 })
-//   }
+  for (let y = 1; y < lenY; y += 1) {
+    applyNWReachable({ x: 0, y })
+  }
 
-//   for (let y = 1; y < lenY; y += 1) {
-//     nodesToExplore.push({ x: 0, y })
-//   }
+  while (frontier.size > 0) {
+    const vec = frontier.dequeue()!
 
-//   while (nodesToExplore.length > 0) {
-//     const node = nodesToExplore.pop()!
-//     const { x, y } = node
+    const currentHeight = heightsMap[vec.x]![vec.y]!
 
-//     if (x >= lenX || y >= lenY) {
-//       continue
-//     }
+    const visitNeighbor = (neighVec: Vec) => {
+      if (neighVec.x < 0 || neighVec.x >= lenX || neighVec.y < 0 || neighVec.y >= lenY) {
+        return
+      }
 
-//     const height = heights[x]![y]!
+      if (
+        reachableNWMap[neighVec.x]![neighVec.y] === true ||
+        currentHeight > heightsMap[neighVec.x]![neighVec.y]!
+      ) {
+        return
+      }
 
-//     const canFlowNorth =
-//       node.y === 0 || (heights[x]![y - 1]! <= height && pacificNodes.has(toKey(x, y - 1)))
-//     const canFlowWest =
-//       node.x === 0 || (heights[x - 1]![y]! <= height && pacificNodes.has(toKey(x - 1, y)))
+      applyNWReachable(neighVec)
+    }
 
-//     if (canFlowWest || canFlowNorth) {
-//       pacificNodes.add(toKey(x, y))
-//     }
+    visitNeighbor({ x: vec.x - 1, y: vec.y })
+    visitNeighbor({ x: vec.x + 1, y: vec.y })
+    visitNeighbor({ x: vec.x, y: vec.y - 1 })
+    visitNeighbor({ x: vec.x, y: vec.y + 1 })
+  }
 
-//     nodesToExplore.push({ x: x + 1, y })
-//     nodesToExplore.push({ x, y: y + 1 })
-//   }
+  const markIfBothReachable = (vec: Vec) => {
+    if (reachableNWMap[vec.x]![vec.y]! === true && reachableSEMap[vec.x]![vec.y]! === true) {
+      bothReachable.push(vec)
+    }
+  }
 
-//   //
+  const applySEReachable = (vec: Vec) => {
+    frontier.enqueue(vec)
+    reachableSEMap[vec.x]![vec.y]! = true
+    markIfBothReachable(vec)
+  }
 
-//   nodesToExplore = []
+  for (let x = 0; x < lenX; x += 1) {
+    applySEReachable({ x, y: lenY - 1 })
+  }
 
-//   for (let x = 0; x < lenX; x += 1) {
-//     nodesToExplore.push({ x, y: lenY - 1 })
-//   }
+  for (let y = 0; y < lenY - 1; y += 1) {
+    applySEReachable({ x: lenX - 1, y })
+  }
 
-//   for (let y = 1; y < lenY; y += 1) {
-//     nodesToExplore.push({ x: lenX - 1, y })
-//   }
+  while (frontier.size > 0) {
+    const vec = frontier.dequeue()!
 
-//   while (nodesToExplore.length > 0) {
-//     const node = nodesToExplore.pop()!
-//     const { x, y } = node
+    const currentHeight = heightsMap[vec.x]![vec.y]!
 
-//     if (x < 0 || y < 0) {
-//       continue
-//     }
+    const visitNeighbor = (neighVec: Vec) => {
+      if (neighVec.x < 0 || neighVec.x >= lenX || neighVec.y < 0 || neighVec.y >= lenY) {
+        return
+      }
 
-//     const height = heights[x]![y]!
+      if (
+        reachableSEMap[neighVec.x]![neighVec.y] === true ||
+        currentHeight > heightsMap[neighVec.x]![neighVec.y]!
+      ) {
+        return
+      }
 
-//     const canFlowSouth =
-//       node.y >= lenY - 1 || (heights[x]![y + 1]! <= height && at.has(toKey(x, y - 1)))
-//     const canFlowEast =
-//       node.x >= lenX - 1 || (heights[x - 1]![y]! <= height && pacificNodes.has(toKey(x - 1, y)))
+      applySEReachable(neighVec)
+    }
 
-//     if (canFlowEast || canFlowNorth) {
-//       pacificNodes.add(toKey(x, y))
-//     }
+    visitNeighbor({ x: vec.x - 1, y: vec.y })
+    visitNeighbor({ x: vec.x + 1, y: vec.y })
+    visitNeighbor({ x: vec.x, y: vec.y - 1 })
+    visitNeighbor({ x: vec.x, y: vec.y + 1 })
+  }
 
-//     nodesToExplore.push({ x: x + 1, y })
-//     nodesToExplore.push({ x, y: y + 1 })
-//   }
-
-//   return result
-// }
+  return bothReachable.map((vec) => [vec.x, vec.y])
+}
 
 describe('tests', () => {
   it('desc 0', () => {
-    expect(1).toEqual(1)
+    const res = pacificAtlantic([
+      [1, 2, 2, 3, 5],
+      [3, 2, 3, 4, 4],
+      [2, 4, 5, 3, 1],
+      [6, 7, 1, 4, 5],
+      [5, 1, 1, 2, 4],
+    ])
+
+    expect(res).toEqual([
+      [0, 4],
+      [1, 3],
+      [1, 4],
+      [2, 2],
+      [3, 0],
+      [3, 1],
+      [4, 0],
+    ])
+  })
+
+  it('test 0', () => {
+    const res = pacificAtlantic([
+      [2, 1],
+      [1, 2],
+    ])
+
+    expect(res).toEqual([
+      [
+        [0, 0],
+        [0, 1],
+        [1, 0],
+        [1, 1],
+      ],
+    ])
   })
 })
