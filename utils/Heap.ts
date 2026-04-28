@@ -1,13 +1,13 @@
 export type Heap<T> = {
   peek: () => T
 
-  contains: (value: T) => boolean
+  has: (value: T) => boolean
 
   enqueue: (value: T) => void
 
   dequeue: () => T
 
-  remove: (value: T) => boolean
+  delete: (value: T) => boolean
 
   readonly size: number
 }
@@ -92,12 +92,12 @@ export class IndexedBinaryHeap<T> implements Heap<T> {
     return this.items[0]!
   }
 
-  public contains(value: T): boolean {
+  public has(value: T): boolean {
     return this.indexByValue.has(value)
   }
 
   public enqueue(value: T) {
-    if (this.contains(value)) {
+    if (this.has(value)) {
       throw new Error(`Value ${value} is present in the heap already`)
     }
 
@@ -114,13 +114,13 @@ export class IndexedBinaryHeap<T> implements Heap<T> {
 
     const value = this.peek()
 
-    this.remove(value)
+    this.delete(value)
 
     return value
   }
 
-  public remove(value: T): boolean {
-    if (!this.contains(value)) {
+  public delete(value: T): boolean {
+    if (!this.has(value)) {
       return false
     }
 
