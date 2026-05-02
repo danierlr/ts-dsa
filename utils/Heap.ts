@@ -12,6 +12,7 @@ export type Heap<T> = {
   readonly size: number
 }
 
+// TODO allow duplicate values, remove returns removed valeus count
 export class IndexedBinaryHeap<T> implements Heap<T> {
   private readonly items: T[] = []
   private readonly indexByValue = new Map<T, number>()
