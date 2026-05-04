@@ -65,7 +65,7 @@ export class Trie {
     yield* dfs(node, prefix)
   }
 
-  public contains(value: string) {
+  public has(value: string) {
     const node = this.findNode(value)
 
     return Boolean(node) && node!.isEnd
