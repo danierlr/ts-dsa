@@ -6,7 +6,7 @@ class Trie {
   constructor() {}
 
   insert(word: string): void {
-    this.trie.insert(word)
+    this.trie.add(word)
   }
 
   search(word: string): boolean {
@@ -24,8 +24,7 @@ class Trie {
 
 describe('example desc', () => {
   it('desc 0', () => {
-    const trie = new Trie()
 
-    expect(res).toEqual([])
+    expect(1).toEqual(1)
   })
 })

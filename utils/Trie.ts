@@ -1,4 +1,4 @@
-class TrieNode {
+export class TrieNode {
   public readonly children = new Map<string, TrieNode>()
   public isEnd: boolean = false
 }
@@ -6,7 +6,7 @@ class TrieNode {
 export class Trie {
   private root: TrieNode | null = null
 
-  public insert(value: string) {
+  public add(value: string) {
     if (this.root === null) {
       this.root = new TrieNode()
     }
@@ -29,7 +29,7 @@ export class Trie {
     node.isEnd = true
   }
 
-  private findNode(prefix: string): TrieNode | null {
+  public findNode(prefix: string): TrieNode | null {
     let node = this.root
 
     let i = 0
